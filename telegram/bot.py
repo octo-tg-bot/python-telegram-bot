@@ -204,7 +204,10 @@ class Bot(TelegramObject):
             base_file_url = 'https://api.telegram.org/file/bot'
 
         self.base_url = str(base_url) + str(self.token)
-        self.base_file_url = str(base_file_url) + str(self.token)
+        if not base_file_url.startswith("file://"):
+            self.base_file_url = str(base_file_url) + str(self.token)
+        else:
+            self.base_file_url = base_file_url
         self.bot: Optional[User] = None
         self._commands: Optional[List[BotCommand]] = None
         self._request = request or Request()

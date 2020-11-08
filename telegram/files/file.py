@@ -118,9 +118,11 @@ class File(TelegramObject):
         """
         if custom_path is not None and out is not None:
             raise ValueError('custom_path and out are mutually exclusive')
-
-        # Convert any UTF-8 char into a url encoded ASCII string.
-        url = self._get_encoded_url()
+        if not self.file_path.startswith("file://"):
+            # Convert any UTF-8 char into a url encoded ASCII string.
+            url = self._get_encoded_url()
+        else:
+            url = self.file_path
 
         if out:
             buf = self.bot.request.retrieve(url)

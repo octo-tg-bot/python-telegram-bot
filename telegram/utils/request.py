@@ -247,7 +247,13 @@ class Request:
         kwargs['headers']['connection'] = 'keep-alive'
         # Also set our user agent
         kwargs['headers']['user-agent'] = USER_AGENT
-
+        if args[1].startswith("file://"):
+            path = args[1][len("file://"):]
+            if os.path.exists(path):
+                with open(path, 'rb') as f:
+                    return f.read()
+            else:
+                raise FileNotFoundError("Can't find file at {}".format(path))
         try:
             resp = self._con_pool.request(*args, **kwargs)
         except urllib3.exceptions.TimeoutError as error:
